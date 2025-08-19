@@ -1,0 +1,142 @@
+/* 工具栏样式 */
+.toolbar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 24px;
+  background-color: #ffffff;
+  border-bottom: 1px solid #e1e4e8;
+  overflow-x: auto;
+  min-height: 56px;
+}
+
+.toolbar-group {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.toolbar-divider {
+  width: 1px;
+  height: 24px;
+  background-color: #e1e4e8;
+  margin: 0 8px;
+}
+
+.toolbar-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  border: 1px solid transparent;
+  border-radius: 6px;
+  background-color: transparent;
+  color: #24292f;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+/* 图标按钮样式 */
+.toolbar-btn svg {
+  stroke-width: 2;
+  transition: all 0.2s ease;
+}
+
+.toolbar-btn:hover {
+  background-color: #f3f4f6;
+  border-color: #d1d5da;
+  transform: translateY(-1px);
+}
+
+.toolbar-btn:hover svg {
+  color: #0969da;
+  stroke-width: 2.5;
+  transform: scale(1.1);
+}
+
+.toolbar-btn.active {
+  background-color: #0969da;
+  color: #ffffff;
+  border-color: #0969da;
+  transform: translateY(-1px);
+  box-shadow: 0 2px 8px rgba(9, 105, 218, 0.3);
+}
+
+.toolbar-btn.active svg {
+  color: #ffffff;
+  stroke-width: 2.5;
+}
+
+.toolbar-btn:active {
+  transform: translateY(0);
+}
+
+/* 特定按钮的悬停效果 */
+.toolbar-btn:hover svg[data-lucide="edit"] {
+  animation: editPulse 0.3s ease;
+}
+
+.toolbar-btn:hover svg[data-lucide="eye"] {
+  animation: eyeBlink 0.3s ease;
+}
+
+.toolbar-btn:hover svg[data-lucide="bold"] {
+  font-weight: 900;
+  stroke-width: 3;
+}
+
+.toolbar-btn:hover svg[data-lucide="italic"] {
+  transform: scale(1.1) skew(-5deg);
+}
+
+.toolbar-btn:hover svg[data-lucide="copy"] {
+  animation: copyBounce 0.3s ease;
+}
+
+.toolbar-btn:hover svg[data-lucide="download"] {
+  animation: downloadSlide 0.3s ease;
+}
+
+/* 动画效果 */
+@keyframes editPulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.15); }
+}
+
+@keyframes eyeBlink {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.1) scaleY(0.8); }
+}
+
+@keyframes copyBounce {
+  0%, 100% { transform: scale(1) translateY(0); }
+  50% { transform: scale(1.1) translateY(-2px); }
+}
+
+@keyframes downloadSlide {
+  0% { transform: scale(1) translateY(0); }
+  50% { transform: scale(1.1) translateY(2px); }
+  100% { transform: scale(1) translateY(0); }
+}
+
+/* 响应式设计 */
+@media (max-width: 768px) {
+  .toolbar {
+    padding: 8px 16px;
+    gap: 4px;
+  }
+  
+  .toolbar-btn {
+    min-width: 28px;
+    height: 28px;
+    padding: 0 6px;
+    font-size: 12px;
+  }
+  
+  .toolbar-divider {
+    height: 20px;
+    margin: 0 4px;
+  }
+}

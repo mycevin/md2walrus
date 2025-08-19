@@ -1,62 +1,65 @@
-# 部署说明
+# MD2Walrus 部署说明
 
-## GitHub Pages 自动部署
+## 构建配置
 
-本项目配置了GitHub Actions workflow，当创建新的tag时会自动构建并部署到GitHub Pages。
+本项目已配置为在 `/md2walrus` 路径下运行。
 
-### 触发条件
+### 构建步骤
 
-- 推送以 `v` 开头的tag（例如：`v1.0.0`, `v2.1.3`）
-- 手动触发（在GitHub Actions页面点击"Run workflow"按钮）
+1. 安装依赖：
+```bash
+pnpm install
+```
 
-### 部署流程
+2. 构建项目：
+```bash
+pnpm build
+```
 
-1. **构建阶段**：
-   - 检出代码
-   - 设置Node.js环境
-   - 设置pnpm包管理器
-   - 安装依赖 (`pnpm install --no-frozen-lockfile`)
-   - 构建项目 (`pnpm run build`)
-   - 上传构建产物到GitHub Pages
+3. 构建完成后，`dist` 目录中的文件可以部署到任何静态文件服务器。
 
-2. **部署阶段**：
-   - 将构建产物部署到gh-pages分支
-   - 自动发布到GitHub Pages
+### 部署要求
 
-### 权限设置
+由于应用配置了 `base: '/md2walrus/'`，需要确保：
 
-workflow使用了以下权限：
-- `contents: read` - 读取仓库内容
-- `pages: write` - 写入GitHub Pages
-- `id-token: write` - 用于身份验证
+1. **服务器配置**：将构建文件部署到服务器的 `/md2walrus/` 路径下
+2. **路由处理**：配置服务器将所有 `/md2walrus/*` 请求都指向 `index.html`（用于支持客户端路由）
 
-**重要**：确保在仓库设置中启用以下权限：
-1. 进入仓库 Settings → Actions → General
-2. 在 "Workflow permissions" 部分选择 "Read and write permissions"
-3. 勾选 "Allow GitHub Actions to create and approve pull requests"
+### 常见服务器配置
 
-### 使用方法
+#### Nginx
+```nginx
+location /md2walrus/ {
+    alias /path/to/your/dist/;
+    try_files $uri $uri/ /md2walrus/index.html;
+}
+```
 
-#### 自动部署（Tag触发）
-1. 确保GitHub仓库已启用GitHub Pages功能
-2. 创建并推送tag：
-   ```bash
-   git tag v1.0.0
-   git push origin v1.0.0
-   ```
-3. 查看Actions页面确认部署状态
-4. 访问GitHub Pages URL查看部署结果
+#### Apache (.htaccess)
+```apache
+RewriteEngine On
+RewriteBase /md2walrus/
+RewriteRule ^index\.html$ - [L]
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule . /md2walrus/index.html [L]
+```
 
-#### 手动部署
-1. 进入GitHub仓库的Actions页面
-2. 选择"Deploy to GitHub Pages" workflow
-3. 点击"Run workflow"按钮
-4. 选择要部署的分支（默认为main）
-5. 点击"Run workflow"开始部署
+#### GitHub Pages
+- 仓库名称：`md2walrus`
+- 或者使用自定义域名并配置 base 路径
+
+### 本地预览
+
+构建后可以使用以下命令预览：
+```bash
+pnpm preview
+```
+
+访问 `http://localhost:4173/md2walrus/` 查看效果。
 
 ### 注意事项
 
-- **GitHub Pages配置**：workflow会自动启用GitHub Pages功能，无需手动配置
-- 首次部署可能需要几分钟时间
-- 部署URL格式：`https://<username>.github.io/<repository-name>/`
-- 如果遇到权限问题，请确保仓库设置中允许GitHub Actions写入权限
+- 所有静态资源路径都会自动添加 `/md2walrus/` 前缀
+- 确保服务器正确处理 SPA 路由
+- 如果部署到根路径，需要修改 `vite.config.ts` 中的 `base` 配置

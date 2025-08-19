@@ -1,0 +1,290 @@
+/* 帮助模态框样式 */
+.help-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  backdrop-filter: blur(4px);
+}
+
+.help-modal {
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+  max-width: 800px;
+  width: 90%;
+  max-height: 90vh;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.help-modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20px 24px;
+  border-bottom: 1px solid #e1e4e8;
+  background-color: #f8f9fa;
+}
+
+.help-modal-header h2 {
+  margin: 0;
+  font-size: 20px;
+  font-weight: 600;
+  color: #24292f;
+}
+
+.help-modal-close {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 8px;
+  border-radius: 6px;
+  color: #656d76;
+  transition: all 0.15s ease;
+}
+
+.help-modal-close:hover {
+  background-color: #e1e4e8;
+  color: #24292f;
+}
+
+.help-modal-content {
+  flex: 1;
+  overflow-y: auto;
+  padding: 24px;
+}
+
+.help-section {
+  margin-bottom: 32px;
+}
+
+.help-section:last-child {
+  margin-bottom: 0;
+}
+
+.help-section h3 {
+  margin: 0 0 16px 0;
+  font-size: 18px;
+  font-weight: 600;
+  color: #24292f;
+  border-bottom: 2px solid #0969da;
+  padding-bottom: 8px;
+}
+
+.help-section p {
+  margin: 0 0 16px 0;
+  color: #656d76;
+  line-height: 1.6;
+}
+
+/* 功能网格 */
+.feature-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 16px;
+  margin-top: 16px;
+}
+
+.feature-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px;
+  background-color: #f6f8fa;
+  border-radius: 8px;
+  border: 1px solid #e1e4e8;
+  transition: all 0.15s ease;
+}
+
+.feature-item:hover {
+  background-color: #f0f3f6;
+  transform: translateY(-1px);
+}
+
+.feature-item svg {
+  color: #0969da;
+}
+
+.feature-item span {
+  font-weight: 500;
+  color: #24292f;
+}
+
+/* 快捷键网格 */
+.shortcuts-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 12px;
+  margin-top: 16px;
+}
+
+.shortcut-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px;
+  background-color: #f6f8fa;
+  border-radius: 8px;
+  border: 1px solid #e1e4e8;
+}
+
+.shortcut-item kbd {
+  background-color: #24292f;
+  color: white;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 12px;
+  font-weight: 600;
+  font-family: 'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono', Consolas, 'Courier New', monospace;
+}
+
+.shortcut-item span {
+  color: #24292f;
+  font-weight: 500;
+}
+
+/* 工具栏帮助 */
+.toolbar-help {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 24px;
+  margin-top: 16px;
+}
+
+.toolbar-group-help h4 {
+  margin: 0 0 12px 0;
+  font-size: 14px;
+  font-weight: 600;
+  color: #24292f;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.toolbar-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.toolbar-button-help {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  background-color: #f6f8fa;
+  border-radius: 6px;
+  border: 1px solid #e1e4e8;
+  transition: all 0.15s ease;
+}
+
+.toolbar-button-help:hover {
+  background-color: #f0f3f6;
+}
+
+.toolbar-button-help svg {
+  color: #0969da;
+  flex-shrink: 0;
+}
+
+.toolbar-button-help span {
+  color: #24292f;
+  font-size: 14px;
+}
+
+/* Markdown 语法示例 */
+.markdown-examples {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 16px;
+}
+
+.example-item {
+  padding: 8px 12px;
+  background-color: #f6f8fa;
+  border-radius: 6px;
+  border: 1px solid #e1e4e8;
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.example-item strong {
+  color: #24292f;
+  font-weight: 600;
+}
+
+.example-item code {
+  background-color: #e1e4e8;
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-family: 'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono', Consolas, 'Courier New', monospace;
+  font-size: 13px;
+  color: #24292f;
+}
+
+/* 响应式设计 */
+@media (max-width: 768px) {
+  .help-modal {
+    width: 95%;
+    max-height: 95vh;
+  }
+  
+  .help-modal-header {
+    padding: 16px 20px;
+  }
+  
+  .help-modal-content {
+    padding: 20px;
+  }
+  
+  .feature-grid {
+    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+    gap: 12px;
+  }
+  
+  .shortcuts-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .toolbar-help {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+  
+  .toolbar-buttons {
+    flex-direction: row;
+    flex-wrap: wrap;
+  }
+  
+  .toolbar-button-help {
+    flex: 1;
+    min-width: 120px;
+  }
+}
+
+/* 滚动条样式 */
+.help-modal-content::-webkit-scrollbar {
+  width: 8px;
+}
+
+.help-modal-content::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 4px;
+}
+
+.help-modal-content::-webkit-scrollbar-thumb {
+  background: #c1c1c1;
+  border-radius: 4px;
+}
+
+.help-modal-content::-webkit-scrollbar-thumb:hover {
+  background: #a8a8a8;
+}

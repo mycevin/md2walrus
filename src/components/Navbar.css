@@ -1,0 +1,96 @@
+/* 顶部导航栏样式 */
+.navbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 24px;
+  background-color: #ffffff;
+  border-bottom: 1px solid #e1e4e8;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  min-height: 60px;
+}
+
+.navbar-left {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.logo {
+  font-size: 20px;
+  font-weight: 700;
+  color: #24292f;
+  text-decoration: none;
+  letter-spacing: -0.5px;
+  cursor: pointer;
+}
+
+.logo:hover {
+  color: #0969da;
+  cursor: pointer;
+}
+
+.navbar-right {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+/* Network Status is now handled by NetworkStatus component */
+
+.help-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  padding: 0;
+  border: 1px solid transparent;
+  border-radius: 6px;
+  background-color: transparent;
+  color: #656d76;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.help-button:hover {
+  background-color: #f3f4f6;
+  border-color: #d1d5da;
+  color: #0969da;
+  transform: translateY(-1px);
+}
+
+.help-button:active {
+  transform: translateY(0);
+}
+
+/* 确保所有按钮都显示手形光标 */
+button,
+[role="button"],
+.logo {
+  cursor: pointer !important;
+}
+
+/* 悬停时强制显示手形光标 */
+button:hover,
+[role="button"]:hover,
+.logo:hover {
+  cursor: pointer !important;
+}
+
+/* 响应式设计 */
+@media (max-width: 768px) {
+  .navbar {
+    padding: 8px 16px;
+  }
+  
+  .logo {
+    font-size: 18px;
+  }
+  
+  /* Network status responsive styles are handled by NetworkStatus component */
+  
+  .navbar-right {
+    gap: 8px;
+  }
+}

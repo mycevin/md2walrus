@@ -1,0 +1,147 @@
+/* Network Status Styles */
+.network-status {
+  display: flex;
+  align-items: center;
+  padding: 6px 12px;
+  background-color: #f6f8fa;
+  border: 1px solid #e1e4e8;
+  border-radius: 6px;
+  transition: all 0.15s ease;
+  min-width: 120px;
+}
+
+.network-status:hover {
+  background-color: #f0f3f6;
+  border-color: #d1d5da;
+}
+
+.network-indicator {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  width: 100%;
+}
+
+.network-icon {
+  flex-shrink: 0;
+}
+
+.network-icon.connected {
+  color: #2ea043;
+  animation: pulse 2s infinite;
+}
+
+.network-icon.disconnected {
+  color: #d73a49;
+}
+
+.network-icon.loading {
+  color: #0969da;
+  animation: spin 1s linear infinite;
+}
+
+.network-name {
+  font-size: 12px;
+  font-weight: 500;
+  color: #24292f;
+  text-transform: capitalize;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* 动画效果 */
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.7;
+  }
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* 响应式设计 */
+@media (max-width: 768px) {
+  .network-status {
+    padding: 4px 8px;
+    min-width: 100px;
+  }
+  
+  .network-name {
+    font-size: 11px;
+  }
+}
+
+/* 状态指示器变体 */
+.network-status.connected {
+  background-color: #dafbe1;
+  border-color: #2ea043;
+}
+
+.network-status.disconnected {
+  background-color: #ffebe9;
+  border-color: #d73a49;
+}
+
+.network-status.loading {
+  background-color: #f6f8fa;
+  border-color: #0969da;
+}
+
+/* 网络特定样式 */
+.network-status .network-name[data-network="testnet"] {
+  color: #fb8500;
+  font-weight: 600;
+}
+
+.network-status .network-name[data-network="devnet"] {
+  color: #9d4edd;
+  font-weight: 600;
+}
+
+.network-status .network-name[data-network="mainnet"] {
+  color: #2ea043;
+  font-weight: 600;
+}
+
+.network-status .network-name[data-network="localnet"] {
+  color: #0969da;
+  font-weight: 600;
+}
+
+/* 工具提示 */
+.network-status {
+  position: relative;
+}
+
+.network-status:hover::after {
+  content: attr(data-tooltip);
+  position: absolute;
+  bottom: -30px;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: #24292f;
+  color: white;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 11px;
+  white-space: nowrap;
+  z-index: 1000;
+  opacity: 0;
+  animation: fadeIn 0.2s ease forwards;
+}
+
+@keyframes fadeIn {
+  to {
+    opacity: 1;
+  }
+}
