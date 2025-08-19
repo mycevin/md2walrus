@@ -47,8 +47,14 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-pnpm-store-
 
+      - name: Debug - List files
+        run: ls -la
+
+      - name: Debug - Check pnpm version
+        run: pnpm --version
+
       - name: Install dependencies
-        run: pnpm install --frozen-lockfile
+        run: pnpm install --no-frozen-lockfile
 
       - name: Build
         run: pnpm run build

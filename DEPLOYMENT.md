@@ -14,7 +14,7 @@
    - 检出代码
    - 设置Node.js环境
    - 设置pnpm包管理器
-   - 安装依赖 (`pnpm install --frozen-lockfile`)
+   - 安装依赖 (`pnpm install --no-frozen-lockfile`)
    - 构建项目 (`pnpm run build`)
    - 上传构建产物到GitHub Pages
 
