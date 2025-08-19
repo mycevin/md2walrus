@@ -7,6 +7,7 @@
 ### 触发条件
 
 - 推送以 `v` 开头的tag（例如：`v1.0.0`, `v2.1.3`）
+- 手动触发（在GitHub Actions页面点击"Run workflow"按钮）
 
 ### 部署流程
 
@@ -31,6 +32,7 @@ workflow使用了以下权限：
 
 ### 使用方法
 
+#### 自动部署（Tag触发）
 1. 确保GitHub仓库已启用GitHub Pages功能
 2. 创建并推送tag：
    ```bash
@@ -39,6 +41,13 @@ workflow使用了以下权限：
    ```
 3. 查看Actions页面确认部署状态
 4. 访问GitHub Pages URL查看部署结果
+
+#### 手动部署
+1. 进入GitHub仓库的Actions页面
+2. 选择"Deploy to GitHub Pages" workflow
+3. 点击"Run workflow"按钮
+4. 选择要部署的分支（默认为main）
+5. 点击"Run workflow"开始部署
 
 ### 注意事项
 
