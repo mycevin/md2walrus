@@ -12,7 +12,6 @@ export default defineConfig({
       output: {
         manualChunks: {
           walrus: ["@mysten/walrus"],
-          sui: ["@mysten/sui.js"],
         },
       },
     },
