@@ -288,3 +288,44 @@
 .help-modal-content::-webkit-scrollbar-thumb:hover {
   background: #a8a8a8;
 }
+
+/* Walrus 相关样式 */
+.walrus-info {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin: 16px 0;
+}
+
+.walrus-step {
+  padding: 12px 16px;
+  background: #f6f8fa;
+  border-radius: 6px;
+  border-left: 3px solid #0969da;
+}
+
+.walrus-step strong {
+  color: #0969da;
+  display: block;
+  margin-bottom: 4px;
+}
+
+.walrus-step p {
+  margin: 0;
+  color: #656d76;
+  font-size: 14px;
+}
+
+.walrus-note {
+  background: #fff8dc;
+  border: 1px solid #d1242f;
+  border-radius: 6px;
+  padding: 12px 16px;
+  margin-top: 16px;
+  font-size: 14px;
+  color: #1f2328;
+}
+
+.walrus-note strong {
+  color: #d1242f;
+}

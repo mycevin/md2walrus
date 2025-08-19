@@ -1,9 +1,6 @@
 import { useState, useRef, useEffect } from "react";
 import { DEFAULT_MARKDOWN_CONTENT } from "../utils/editorUtils";
-import {
-  insertTextAtCursor,
-  insertLink,
-} from "../utils/editorUtils";
+import { insertTextAtCursor, insertLink } from "../utils/editorUtils";
 
 export const useEditor = () => {
   const [value, setValue] = useState<string>(DEFAULT_MARKDOWN_CONTENT);
@@ -42,7 +39,7 @@ export const useEditor = () => {
             break;
           case "s":
             e.preventDefault();
-            // 保存功能可以在这里添加
+            // 保存功能将通过外部处理
             break;
         }
       }

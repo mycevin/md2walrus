@@ -11,9 +11,15 @@ importers:
       '@mysten/dapp-kit':
         specifier: ^0.17.4
         version: 0.17.4(@tanstack/react-query@5.85.5(react@19.1.1))(@types/react-dom@19.1.7(@types/react@19.1.10))(@types/react@19.1.10)(react-dom@19.1.1(react@19.1.1))(react@19.1.1)(typescript@5.8.3)
+      '@mysten/sui':
+        specifier: 1.37.3
+        version: 1.37.3(typescript@5.8.3)
       '@mysten/sui.js':
         specifier: ^0.54.1
         version: 0.54.1(typescript@5.8.3)
+      '@mysten/walrus':
+        specifier: ^0.6.3
+        version: 0.6.3(typescript@5.8.3)
       '@tanstack/react-query':
         specifier: ^5.85.5
         version: 5.85.5(react@19.1.1)
@@ -485,6 +491,12 @@ packages:
 
   '@mysten/wallet-standard@0.16.11':
     resolution: {integrity: sha512-kMdzoes69HIMmrcGSnLCifsV98K1pYkG14Y9e8lEJrpKM8cSgEMGgwaThTttmt3njFea9Ni19XMdBg8bDofFHA==}
+
+  '@mysten/walrus-wasm@0.1.1':
+    resolution: {integrity: sha512-j+12gNbPAIkgY7g1d4aCF2rXDpgTLQsyjEdu0s7A8xlu/95u5quP7Tc7Jz7VLFfbtkJigBpGyPZ/8J2tZv4cJA==}
+
+  '@mysten/walrus@0.6.3':
+    resolution: {integrity: sha512-Yw/zANlVe5ZV34N0NqyI+OF7OkL5kvvHjkc3cNnVXKYxY48RQtyiFazEC8mWMqWj28qswZZavYASbondMqaF+w==}
 
   '@mysten/window-wallet-core@0.0.6':
     resolution: {integrity: sha512-uYjdUVok0pAaMGMxAdZfmW+2SCXgdQok9YtKmno5Tj8zlRQGv9Qet7EuCnDcBKquSbtqid3yhug7fcD+t8/KmA==}
@@ -1225,6 +1237,9 @@ packages:
 
   csstype@3.1.3:
     resolution: {integrity: sha512-M1uQkMl8rQK/szD0LNhtqxIPLpimGm8sOBwU7lLnCpSbTyY3yeU1Vc7l4KT5zT4s/yOxHH5O7tIuuLOCnLADRw==}
+
+  dataloader@2.2.3:
+    resolution: {integrity: sha512-y2krtASINtPFS1rSDjacrFgn1dcUuoREVabwlOGOe4SdxenREqwjwjElAdwvbGM7kgZz9a3KVicWR7vcz8rnzA==}
 
   debug@4.4.1:
     resolution: {integrity: sha512-KcKCqiftBJcZr++7ykoDIEwSa3XWowTfNPo92BYxjXiyYEVrUQh2aLyhxBCwww+heortUFxEJYcRzosstTEBYQ==}
@@ -2664,6 +2679,20 @@ snapshots:
       - '@gql.tada/vue-support'
       - typescript
 
+  '@mysten/walrus-wasm@0.1.1': {}
+
+  '@mysten/walrus@0.6.3(typescript@5.8.3)':
+    dependencies:
+      '@mysten/bcs': 1.7.0
+      '@mysten/sui': 1.37.3(typescript@5.8.3)
+      '@mysten/utils': 0.1.1
+      '@mysten/walrus-wasm': 0.1.1
+      dataloader: 2.2.3
+    transitivePeerDependencies:
+      - '@gql.tada/svelte-support'
+      - '@gql.tada/vue-support'
+      - typescript
+
   '@mysten/window-wallet-core@0.0.6':
     dependencies:
       '@mysten/utils': 0.1.1
@@ -3404,6 +3433,8 @@ snapshots:
   cssesc@3.0.0: {}
 
   csstype@3.1.3: {}
+
+  dataloader@2.2.3: {}
 
   debug@4.4.1:
     dependencies:

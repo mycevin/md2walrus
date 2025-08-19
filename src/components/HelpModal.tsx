@@ -19,6 +19,7 @@ import {
   Minus,
   Copy,
   Download,
+  Save,
 } from "lucide-react";
 import "./HelpModal.css";
 
@@ -44,7 +45,8 @@ const HelpModal = ({ isOpen, onClose }: HelpModalProps) => {
           <section className="help-section">
             <h3>🎯 Basic Features</h3>
             <p>
-              MD2Walrus is a full-screen Markdown editor with real-time preview and rich editing features.
+              MD2Walrus is a full-screen Markdown editor with real-time preview
+              and rich editing features.
             </p>
 
             <div className="feature-grid">
@@ -72,6 +74,44 @@ const HelpModal = ({ isOpen, onClose }: HelpModalProps) => {
                 <Download size={16} />
                 <span>File Export</span>
               </div>
+              <div className="feature-item">
+                <Save size={16} />
+                <span>Walrus Storage</span>
+              </div>
+            </div>
+          </section>
+
+          <section className="help-section">
+            <h3>🌊 Walrus Storage</h3>
+            <p>
+              Save your Markdown documents permanently to the Walrus
+              decentralized storage network.
+            </p>
+
+            <div className="walrus-info">
+              <div className="walrus-step">
+                <strong>1. Connect Wallet</strong>
+                <p>Connect your Sui wallet to enable saving to Walrus</p>
+              </div>
+              <div className="walrus-step">
+                <strong>2. Save Document</strong>
+                <p>
+                  Click the save button or press <kbd>Ctrl</kbd> + <kbd>S</kbd>
+                </p>
+              </div>
+              <div className="walrus-step">
+                <strong>3. Sign Transactions</strong>
+                <p>Approve the registration and certification transactions</p>
+              </div>
+              <div className="walrus-step">
+                <strong>4. Get Blob ID</strong>
+                <p>Receive a unique Blob ID to access your document forever</p>
+              </div>
+            </div>
+
+            <div className="walrus-note">
+              <strong>Note:</strong> Documents are stored for 5 epochs (~30
+              days) on Sui Testnet. Storage costs are paid in SUI tokens.
             </div>
           </section>
 
@@ -96,7 +136,7 @@ const HelpModal = ({ isOpen, onClose }: HelpModalProps) => {
               </div>
               <div className="shortcut-item">
                 <kbd>Ctrl</kbd> + <kbd>S</kbd>
-                <span>Save (reserved)</span>
+                <span>Save to Walrus</span>
               </div>
             </div>
           </section>

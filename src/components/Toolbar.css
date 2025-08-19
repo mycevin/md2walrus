@@ -140,3 +140,42 @@
     margin: 0 4px;
   }
 }
+
+/* 保存按钮特殊样式 */
+.save-btn {
+  background: #2ea043;
+  color: white;
+  position: relative;
+  min-width: 40px;
+  transition: all 0.2s ease;
+}
+
+.save-btn:hover:not(:disabled) {
+  background: #2c974b;
+}
+
+.save-btn.saving {
+  background: #fd7e14;
+  color: white;
+  cursor: wait;
+  min-width: 80px;
+}
+
+.save-btn .saving-icon {
+  animation: spin 1s linear infinite;
+}
+
+.save-btn .save-text {
+  font-size: 12px;
+  margin-left: 4px;
+  white-space: nowrap;
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}

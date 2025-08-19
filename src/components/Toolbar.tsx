@@ -18,6 +18,7 @@ import {
   Minus,
   Copy,
   Download,
+  Save,
 } from "lucide-react";
 import type { ToolbarButton } from "../types";
 import {
@@ -39,6 +40,9 @@ interface ToolbarProps {
   value: string;
   setValue: (value: string) => void;
   insertText: (before: string, after?: string) => void;
+  onSave?: () => void;
+  isSaving?: boolean;
+  isDisabled?: boolean;
 }
 
 const Toolbar = ({
@@ -48,6 +52,9 @@ const Toolbar = ({
   value,
   setValue,
   insertText,
+  onSave,
+  isSaving = false,
+  isDisabled = false,
 }: ToolbarProps) => {
   // 视图切换按钮
   const viewButtons: ToolbarButton[] = [
@@ -189,9 +196,25 @@ const Toolbar = ({
     </div>
   );
 
+  const renderSaveButtonGroup = () => (
+    <div className="toolbar-group">
+      <button
+        className={`toolbar-btn save-btn ${isSaving ? "saving" : ""}`}
+        onClick={() => onSave?.()}
+        title="Save to Walrus (Ctrl+S)"
+        disabled={isSaving || !onSave || isDisabled}
+      >
+        <Save size={16} className={isSaving ? "saving-icon" : ""} />
+        {isSaving && <span className="save-text">Saving...</span>}
+      </button>
+    </div>
+  );
+
   return (
     <div className="toolbar">
       {renderButtonGroup(viewButtons)}
+      <div className="toolbar-divider"></div>
+      {renderSaveButtonGroup()}
       <div className="toolbar-divider"></div>
       {renderButtonGroup(formattingButtons)}
       <div className="toolbar-divider"></div>

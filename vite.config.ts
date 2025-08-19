@@ -4,5 +4,24 @@ import react from "@vitejs/plugin-react";
 // https://vite.dev/config/
 export default defineConfig({
   plugins: [react()],
-  base: "/md2walrus/",
+  optimizeDeps: {
+    include: ["@mysten/walrus", "@mysten/walrus-wasm"],
+  },
+  build: {
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          walrus: ["@mysten/walrus"],
+          sui: ["@mysten/sui.js"],
+        },
+      },
+    },
+  },
+  server: {
+    headers: {
+      "Cross-Origin-Embedder-Policy": "require-corp",
+      "Cross-Origin-Opener-Policy": "same-origin",
+    },
+  },
+  assetsInclude: ["**/*.wasm"],
 });

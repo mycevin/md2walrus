@@ -1,0 +1,232 @@
+.save-status {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  min-width: 320px;
+  max-width: 400px;
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  border: 1px solid #e1e5e9;
+  z-index: 1000;
+  overflow: hidden;
+  animation: slideIn 0.3s ease-out;
+}
+
+.save-status.loading {
+  border-left: 4px solid #0969da;
+}
+
+.save-status.success {
+  border-left: 4px solid #2ea043;
+}
+
+.save-status.error {
+  border-left: 4px solid #d1242f;
+}
+
+.save-status-content {
+  display: flex;
+  align-items: flex-start;
+  padding: 16px;
+  gap: 12px;
+}
+
+.save-status-icon {
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.save-status-icon.loading {
+  color: #0969da;
+  animation: spin 1s linear infinite;
+}
+
+.save-status-icon.success {
+  color: #2ea043;
+}
+
+.save-status-icon.error {
+  color: #d1242f;
+}
+
+.save-status-text {
+  flex: 1;
+  min-width: 0;
+}
+
+.save-status-message {
+  font-size: 14px;
+  font-weight: 500;
+  color: #1f2328;
+  margin-bottom: 8px;
+  word-break: break-word;
+}
+
+.save-status-progress {
+  width: 100%;
+  height: 4px;
+  background: #f6f8fa;
+  border-radius: 2px;
+  overflow: hidden;
+}
+
+.save-status-progress-bar {
+  height: 100%;
+  background: #0969da;
+  border-radius: 2px;
+  transition: width 0.3s ease;
+}
+
+.save-status-close {
+  flex-shrink: 0;
+  background: none;
+  border: none;
+  color: #656d76;
+  cursor: pointer;
+  padding: 4px;
+  border-radius: 4px;
+  transition: background-color 0.2s ease;
+}
+
+.save-status-close:hover {
+  background: #f6f8fa;
+  color: #1f2328;
+}
+
+.save-status-details {
+  border-top: 1px solid #e1e5e9;
+  padding: 12px 16px;
+  background: #f6f8fa;
+}
+
+.save-status-blob-id {
+  margin-bottom: 8px;
+}
+
+.save-status-label {
+  font-size: 12px;
+  font-weight: 600;
+  color: #656d76;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.save-status-code {
+  display: block;
+  font-family: 'SF Mono', 'Monaco', 'Cascadia Code', 'Consolas', monospace;
+  font-size: 12px;
+  background: white;
+  border: 1px solid #d1d9e0;
+  border-radius: 4px;
+  padding: 6px 8px;
+  margin-top: 4px;
+  word-break: break-all;
+  color: #1f2328;
+}
+
+.save-status-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.save-status-copy-btn,
+.save-status-view-btn {
+  font-size: 12px;
+  padding: 6px 12px;
+  border-radius: 4px;
+  border: 1px solid #d1d9e0;
+  background: white;
+  color: #1f2328;
+  text-decoration: none;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-weight: 500;
+}
+
+.save-status-copy-btn:hover,
+.save-status-view-btn:hover {
+  background: #f6f8fa;
+  border-color: #afb8c1;
+}
+
+.save-status-view-btn {
+  background: #0969da;
+  color: white;
+  border-color: #0969da;
+}
+
+.save-status-view-btn:hover {
+  background: #0860ca;
+  border-color: #0860ca;
+  color: white;
+}
+
+@keyframes slideIn {
+  from {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* 错误详情样式 */
+.save-status-error-details {
+  border-top: 1px solid #e1e5e9;
+  padding: 12px 16px;
+  background: #fff5f5;
+}
+
+.save-status-error-message {
+  font-size: 13px;
+  color: #1f2328;
+}
+
+.save-status-error-message p {
+  margin: 0 0 8px 0;
+  font-weight: 600;
+  color: #d1242f;
+}
+
+.save-status-error-message ul {
+  margin: 0;
+  padding-left: 20px;
+}
+
+.save-status-error-message li {
+  margin-bottom: 6px;
+}
+
+.save-status-faucet-link {
+  color: #0969da;
+  text-decoration: none;
+  font-weight: 500;
+  transition: color 0.2s ease;
+}
+
+.save-status-faucet-link:hover {
+  color: #0860ca;
+  text-decoration: underline;
+}
+
+/* 响应式设计 */
+@media (max-width: 480px) {
+  .save-status {
+    left: 20px;
+    right: 20px;
+    min-width: auto;
+    max-width: none;
+  }
+}
