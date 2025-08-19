@@ -30,6 +30,11 @@ workflow使用了以下权限：
 - `pages: write` - 写入GitHub Pages
 - `id-token: write` - 用于身份验证
 
+**重要**：确保在仓库设置中启用以下权限：
+1. 进入仓库 Settings → Actions → General
+2. 在 "Workflow permissions" 部分选择 "Read and write permissions"
+3. 勾选 "Allow GitHub Actions to create and approve pull requests"
+
 ### 使用方法
 
 #### 自动部署（Tag触发）
@@ -51,6 +56,7 @@ workflow使用了以下权限：
 
 ### 注意事项
 
-- 确保仓库设置中已启用GitHub Pages
+- **GitHub Pages配置**：workflow会自动启用GitHub Pages功能，无需手动配置
 - 首次部署可能需要几分钟时间
 - 部署URL格式：`https://<username>.github.io/<repository-name>/`
+- 如果遇到权限问题，请确保仓库设置中允许GitHub Actions写入权限
