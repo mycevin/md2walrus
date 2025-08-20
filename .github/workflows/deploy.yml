@@ -22,6 +22,9 @@ jobs:
           npm install -g pnpm
           pnpm install
           pnpm run build
+      - name: Write Custom Domain
+        run: |
+          echo "md2walrus.xingyue.tech" > dist/CNAME
 
       - name: Deploy 🚀
         uses: JamesIves/github-pages-deploy-action@v4
