@@ -13,3 +13,8 @@ A markdown component can be very simple, or very complex.
 - Use a framework to display markdown content
 - SDK wrapper based on Sui communication or other chains
 - Sui contract to compose pages or applications
+
+
+## In the future
+
+Write totally decentralized app with markdown.
