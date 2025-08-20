@@ -4,3 +4,4 @@ export { default as Editor } from "./Editor";
 export { default as HelpModal } from "./HelpModal";
 export { default as NetworkStatus } from "./NetworkStatus";
 export { default as BlobList } from "./BlobList";
+export { WalletProvider } from "./WalletProvider";
