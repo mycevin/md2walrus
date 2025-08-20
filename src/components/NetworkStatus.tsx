@@ -1,4 +1,4 @@
-import { Wifi, Loader2 } from "lucide-react";
+import { Wifi, Loader2, ChevronDown } from "lucide-react";
 import {
   useCurrentAccount,
   useCurrentWallet,
@@ -24,6 +24,25 @@ const NetworkStatus = ({ className = "" }: NetworkStatusProps) => {
     isConnected: false,
     isLoading: true,
   });
+  const [showNetworkSelector, setShowNetworkSelector] = useState(false);
+
+  // 点击外部区域关闭网络选择器
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      const target = event.target as Element;
+      if (!target.closest(".network-status")) {
+        setShowNetworkSelector(false);
+      }
+    };
+
+    if (showNetworkSelector) {
+      document.addEventListener("mousedown", handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [showNetworkSelector]);
 
   useEffect(() => {
     const updateNetworkInfo = async () => {
@@ -67,144 +86,11 @@ const NetworkStatus = ({ className = "" }: NetworkStatusProps) => {
           });
         }
 
-        // 方法0: 优先使用 SuiClientContext 的网络信息（最准确）
-        if (network) {
-          console.log("Using SuiClientContext network:", network);
-          const contextNetwork = network.toLowerCase();
+        // 简化：始终显示 Mainnet
+        networkName = "Sui Mainnet";
+        console.log("✅ Set network to Mainnet (simplified)");
 
-          if (contextNetwork === "testnet") {
-            networkName = "Sui Testnet";
-            console.log("✅ Set network to Testnet (from context)");
-          } else if (contextNetwork === "devnet") {
-            networkName = "Sui Devnet";
-            console.log("✅ Set network to Devnet (from context)");
-          } else if (contextNetwork === "mainnet") {
-            networkName = "Sui Mainnet";
-            console.log("✅ Set network to Mainnet (from context)");
-          } else if (contextNetwork === "localnet") {
-            networkName = "Sui Localnet";
-            console.log("✅ Set network to Localnet (from context)");
-          } else {
-            console.log("❌ Context network not recognized:", contextNetwork);
-          }
-        }
-
-        // 方法1: 如果 SuiClientContext 没有网络信息，从钱包的 chains 属性获取
-        if (
-          networkName === "Sui Network" &&
-          currentWallet.chains &&
-          currentWallet.chains.length > 0
-        ) {
-          console.log("All available chains:", currentWallet.chains);
-
-          // 尝试从钱包的 features 获取当前网络信息
-          let currentChain = null;
-
-          // 检查是否有 standard:network 功能来获取当前网络
-          if (
-            currentWallet.features &&
-            currentWallet.features["standard:network"]
-          ) {
-            const networkFeature = currentWallet.features["standard:network"];
-            const networkData = networkFeature as Record<string, unknown>;
-            if (
-              networkData.currentNetwork &&
-              typeof networkData.currentNetwork === "string"
-            ) {
-              currentChain = networkData.currentNetwork;
-              console.log("Current network from features:", currentChain);
-            }
-          }
-
-          // 如果没有从 features 获取到，尝试从 accounts 或其他方式获取
-          if (!currentChain && currentAccount) {
-            // 尝试从账户信息推断当前网络
-            console.log(
-              "Trying to infer network from account:",
-              currentAccount
-            );
-
-            // 检查账户地址格式或其他标识
-            if (currentAccount.address) {
-              console.log("Account address:", currentAccount.address);
-
-              // 尝试从账户地址推断网络
-              // 注意：Sui 地址在不同网络上是相同的，所以这个方法可能不可靠
-              // 但我们可以尝试其他方法
-
-              // 检查是否有其他网络相关的信息
-              if (currentAccount.publicKey) {
-                console.log("Account public key:", currentAccount.publicKey);
-              }
-            }
-
-            // 尝试从钱包的其他属性推断
-            if (currentWallet.accounts && currentWallet.accounts.length > 0) {
-              console.log("Wallet accounts:", currentWallet.accounts);
-            }
-          }
-
-          // 如果仍然没有确定，尝试使用 SuiClientContext 的网络信息
-          if (!currentChain && network) {
-            console.log("Using SuiClientContext network:", network);
-            currentChain = `sui:${network}`;
-          }
-
-          // 如果仍然没有确定，尝试从钱包的当前状态推断
-          if (!currentChain) {
-            // 尝试从钱包的其他属性推断当前网络
-            console.log("Attempting to infer network from wallet state...");
-
-            // 检查钱包是否有当前网络的状态
-            if (currentWallet.version) {
-              console.log("Wallet version:", currentWallet.version);
-            }
-
-            // 如果钱包支持多个网络，尝试找到当前活跃的网络
-            // 这里我们可以尝试一个更智能的方法
-            const availableChains = currentWallet.chains || [];
-            console.log("Available chains for selection:", availableChains);
-
-            // 使用第一个链作为默认值
-            currentChain = availableChains[0];
-            console.log("Using first chain as default:", currentChain);
-          }
-
-          const chain = currentChain.toLowerCase();
-          console.log("Final detected wallet chain:", chain);
-          console.log("Chain type check:", {
-            isTestnet: chain === "sui:testnet" || chain.endsWith("testnet"),
-            isDevnet: chain === "sui:devnet" || chain.endsWith("devnet"),
-            isMainnet: chain === "sui:mainnet" || chain.endsWith("mainnet"),
-            isLocalnet: chain === "sui:localnet" || chain.endsWith("localnet"),
-          });
-
-          // 使用更精确的匹配
-          if (chain === "sui:testnet" || chain.endsWith("testnet")) {
-            networkName = "Sui Testnet";
-            console.log("✅ Set network to Testnet");
-          } else if (chain === "sui:devnet" || chain.endsWith("devnet")) {
-            networkName = "Sui Devnet";
-            console.log("✅ Set network to Devnet");
-          } else if (chain === "sui:mainnet" || chain.endsWith("mainnet")) {
-            networkName = "Sui Mainnet";
-            console.log("✅ Set network to Mainnet");
-          } else if (chain === "sui:localnet" || chain.endsWith("localnet")) {
-            networkName = "Sui Localnet";
-            console.log("✅ Set network to Localnet");
-          } else {
-            console.log("❌ Chain not recognized:", chain);
-          }
-        } else {
-          console.log("❌ No chains found in wallet");
-        }
-
-        // 如果仍然无法确定网络，使用默认值
-        if (networkName === "Sui Network") {
-          console.log("Could not determine network from wallet, using default");
-          networkName = "Sui Mainnet"; // 默认使用 Mainnet
-        }
-
+        // 简化：移除复杂的网络检测逻辑
         console.log("Final detected network:", networkName);
 
         setNetworkInfo({
@@ -215,7 +101,7 @@ const NetworkStatus = ({ className = "" }: NetworkStatusProps) => {
       } catch (error) {
         console.log("Network detection error:", error);
         setNetworkInfo({
-          network: "Unknown Network",
+          network: "Sui Mainnet",
           isConnected: !!currentAccount,
           isLoading: false,
         });
@@ -272,17 +158,28 @@ const NetworkStatus = ({ className = "" }: NetworkStatusProps) => {
     ? `Connected to ${networkInfo.network}`
     : "Wallet not connected";
 
+  // 简化：移除网络切换功能
+  const handleNetworkChange = async () => {
+    // 简化版本：只显示提示，不实际切换
+    console.log(`Network switching disabled - always using Mainnet`);
+    setShowNetworkSelector(false);
+  };
+
   // 如果钱包未连接，不显示网络状态
   if (!networkInfo.isConnected) {
     return null;
   }
 
+  const availableNetworks = [{ id: "mainnet", name: "Sui Mainnet (Current)" }];
+
   return (
-    <div
-      className={`network-status ${className} connected`}
-      data-tooltip={tooltip}
-    >
-      <div className="network-indicator">
+    <div className={`network-status ${className} connected`}>
+      <div
+        className="network-indicator"
+        onClick={() => setShowNetworkSelector(!showNetworkSelector)}
+        style={{ cursor: "pointer" }}
+        data-tooltip={tooltip}
+      >
         {networkInfo.isLoading ? (
           <Loader2 size={16} className="network-icon loading" />
         ) : (
@@ -291,7 +188,22 @@ const NetworkStatus = ({ className = "" }: NetworkStatusProps) => {
         <span className="network-name" data-network={networkType}>
           {networkInfo.network}
         </span>
+        <ChevronDown size={12} className="network-dropdown-icon" />
       </div>
+
+      {showNetworkSelector && (
+        <div className="network-selector">
+          {availableNetworks.map((net) => (
+            <div
+              key={net.id}
+              className={`network-option ${network === net.id ? "active" : ""}`}
+              onClick={() => handleNetworkChange()}
+            >
+              {net.name}
+            </div>
+          ))}
+        </div>
+      )}
     </div>
   );
 };

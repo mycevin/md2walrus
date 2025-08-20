@@ -12,7 +12,7 @@ const getWasmUrl = () => {
 };
 
 // 创建 Sui 客户端
-export const createSuiClient = (network: "testnet" | "mainnet" = "testnet") => {
+export const createSuiClient = (network: "testnet" | "mainnet" = "mainnet") => {
   return new SuiClient({
     url: getFullnodeUrl(network),
   });
@@ -20,7 +20,7 @@ export const createSuiClient = (network: "testnet" | "mainnet" = "testnet") => {
 
 // 创建 Walrus 客户端
 export const createWalrusClient = (
-  network: "testnet" | "mainnet" = "testnet"
+  network: "testnet" | "mainnet" = "mainnet"
 ) => {
   const suiClient = new SuiClient({
     url: getFullnodeUrl(network),
@@ -122,8 +122,8 @@ const waitForWasmLoad = async (maxRetries = 5, delay = 1000) => {
 
       // 尝试创建一个简单的 WalrusClient 实例来检查 WASM 是否已加载
       new WalrusClient({
-        network: "testnet",
-        suiClient: new SuiClient({ url: getFullnodeUrl("testnet") }) as never,
+        network: "mainnet",
+        suiClient: new SuiClient({ url: getFullnodeUrl("mainnet") }) as never,
         wasmUrl: getWasmUrl(),
       });
 
@@ -147,7 +147,7 @@ const waitForWasmLoad = async (maxRetries = 5, delay = 1000) => {
 };
 
 export const getWalrusClient = async (
-  network: "testnet" | "mainnet" = "testnet"
+  network: "testnet" | "mainnet" = "mainnet"
 ): Promise<WalrusClient> => {
   if (_walrusClient) {
     return _walrusClient;
@@ -221,7 +221,7 @@ export const resetWalrusClient = () => {
 export const testWalrusClient = async () => {
   try {
     console.log("Testing Walrus client initialization...");
-    const client = await getWalrusClient("testnet");
+    const client = await getWalrusClient("mainnet");
     console.log("✅ Walrus client test successful:", client);
     return { success: true, client };
   } catch (error) {

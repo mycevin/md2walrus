@@ -13,7 +13,7 @@ import {
 
 // WAL 代币类型
 const WAL_COIN_TYPE =
-  "0x8270feb7375eee355e64fdb69c50abb6b5f9393a722883c1cf45f8e26048810a::wal::WAL";
+  "0x356a26eb9e012a68958082340d4c4116e7f55615cf27affcff209cf0ae544f59::wal::WAL";
 
 export const useWalrusSave = () => {
   const currentAccount = useCurrentAccount();
@@ -37,7 +37,7 @@ export const useWalrusSave = () => {
     const initWalrusClient = async () => {
       try {
         console.log("Initializing Walrus client...");
-        await getWalrusClient();
+        await getWalrusClient("mainnet");
         setIsInitialized(true);
         setInitError(null);
         console.log("Walrus client ready");
@@ -96,7 +96,7 @@ export const useWalrusSave = () => {
         // 创建临时文件来估算成本
         const file = createWalrusFileFromMarkdown(content, "temp.md");
 
-        const walrusClient = await getWalrusClient();
+        const walrusClient = await getWalrusClient("mainnet");
         const flow = walrusClient.writeFilesFlow({
           files: [file],
         });
@@ -202,7 +202,7 @@ export const useWalrusSave = () => {
         let walrusClient;
         try {
           console.log("Getting Walrus client...");
-          walrusClient = await getWalrusClient();
+          walrusClient = await getWalrusClient("mainnet");
           console.log("Walrus client obtained successfully");
         } catch (clientError) {
           console.error("Failed to get Walrus client:", clientError);

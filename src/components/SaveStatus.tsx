@@ -102,7 +102,7 @@ const SaveStatus = ({ saveState, onClose }: SaveStatusProps) => {
               复制 ID
             </button>
             <a
-              href={`https://walruscan.com/testnet/blob/${saveState.blobId}`}
+              href={`https://walruscan.com/mainnet/blob/${saveState.blobId}`}
               target="_blank"
               rel="noopener noreferrer"
               className="save-status-view-btn"
@@ -121,23 +121,16 @@ const SaveStatus = ({ saveState, onClose }: SaveStatusProps) => {
               <ul>
                 <li>
                   <a
-                    href="https://walruscan.com/testnet/faucet"
+                    href="https://walruscan.com/mainnet"
                     target="_blank"
                     rel="noopener noreferrer"
                     className="save-status-faucet-link"
                   >
-                    🚰 Walrus 测试网水龙头
+                    🔗 Walrus 主网浏览器
                   </a>
                 </li>
                 <li>
-                  <a
-                    href="https://suiecosystem.com/faucet"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="save-status-faucet-link"
-                  >
-                    🚰 Sui 测试网水龙头
-                  </a>
+                  您需要在 Sui 主网上拥有 WAL 代币才能使用 Walrus 存储服务
                 </li>
               </ul>
             </div>

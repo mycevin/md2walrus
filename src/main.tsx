@@ -19,10 +19,18 @@ const { networkConfig } = createNetworkConfig({
   mainnet: { url: "https://fullnode.mainnet.sui.io:443" },
 });
 
+// 简化：始终使用 mainnet
+const getDefaultNetwork = (): "mainnet" => {
+  return "mainnet";
+};
+
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
     <QueryClientProvider client={queryClient}>
-      <SuiClientProvider networks={networkConfig} defaultNetwork="mainnet">
+      <SuiClientProvider
+        networks={networkConfig}
+        defaultNetwork={getDefaultNetwork()}
+      >
         <WalletProvider
           autoConnect
           storageKey="md2walrus-wallet"

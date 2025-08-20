@@ -118,11 +118,60 @@
   font-weight: 600;
 }
 
-/* 工具提示 */
+
+
+/* 网络选择器样式 */
 .network-status {
   position: relative;
 }
 
+.network-dropdown-icon {
+  color: #6e7781;
+  transition: transform 0.2s ease;
+}
+
+.network-status:hover .network-dropdown-icon {
+  transform: rotate(180deg);
+}
+
+.network-selector {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  background-color: white;
+  border: 1px solid #e1e4e8;
+  border-radius: 6px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  z-index: 1000;
+  margin-top: 4px;
+  overflow: hidden;
+}
+
+.network-option {
+  padding: 8px 12px;
+  font-size: 12px;
+  color: #24292f;
+  cursor: pointer;
+  transition: background-color 0.15s ease;
+  border-bottom: 1px solid #f6f8fa;
+}
+
+.network-option:last-child {
+  border-bottom: none;
+}
+
+.network-option:hover {
+  background-color: #f6f8fa;
+}
+
+.network-option.active {
+  background-color: #0969da;
+  color: white;
+  font-weight: 500;
+}
+
+/* 工具提示 */
 .network-status:hover::after {
   content: attr(data-tooltip);
   position: absolute;
