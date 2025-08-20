@@ -64,6 +64,42 @@
   transform: translateY(0);
 }
 
+.navbar-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  padding: 0;
+  border: 1px solid transparent;
+  border-radius: 6px;
+  background-color: transparent;
+  color: #656d76;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.navbar-button:hover {
+  background-color: #f3f4f6;
+  border-color: #d1d5da;
+  color: #0969da;
+  transform: translateY(-1px);
+}
+
+.navbar-button:active {
+  transform: translateY(0);
+}
+
+.blob-list-button {
+  color: #667eea;
+}
+
+.blob-list-button:hover {
+  background-color: #f0f4ff;
+  border-color: #667eea;
+  color: #4f46e5;
+}
+
 /* 确保所有按钮都显示手形光标 */
 button,
 [role="button"],

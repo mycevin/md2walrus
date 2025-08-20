@@ -10,6 +10,7 @@ import {
   type SaveFlowState,
   type SaveResult,
 } from "../utils/walrusClient";
+import { blobStorage, createBlobItem } from "../utils/blobStorage";
 
 // WAL 代币类型
 const WAL_COIN_TYPE =
@@ -265,6 +266,18 @@ export const useWalrusSave = () => {
         const files = await flow.listFiles();
         const blobId = files[0]?.blobId;
 
+        // 保存到本地存储
+        if (blobId && currentAccount) {
+          const blobItem = createBlobItem(
+            blobId,
+            filename,
+            content,
+            currentAccount.address
+          );
+          blobStorage.saveBlob(blobItem);
+          console.log("Blob saved to local storage:", blobItem);
+        }
+
         setSaveState({
           stage: "completed",
           progress: 100,
@@ -315,6 +328,7 @@ export const useWalrusSave = () => {
     saveState,
     resetSaveState,
     isConnected: !!currentAccount,
+    currentAccount,
     isInitialized,
     initError,
     walBalance,

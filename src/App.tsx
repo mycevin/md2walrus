@@ -2,21 +2,26 @@ import { useState, useCallback, useEffect } from "react";
 import { useEditor } from "./hooks/useEditor";
 import { useWalrusSave } from "./hooks/useWalrusSave";
 import { testWalrusClient } from "./utils/walrusClient";
+
 import Navbar from "./components/Navbar";
 import Toolbar from "./components/Toolbar";
 import Editor from "./components/Editor";
 import HelpModal from "./components/HelpModal";
 import SaveStatus from "./components/SaveStatus";
+import BlobList from "./components/BlobList";
+
 import "./App.css";
 
 function App() {
   const [isHelpOpen, setIsHelpOpen] = useState(false);
+  const [isBlobListOpen, setIsBlobListOpen] = useState(false);
   const [testResult, setTestResult] = useState<string>("");
   const {
     saveToWalrus,
     saveState,
     resetSaveState,
     isConnected,
+    currentAccount,
     isInitialized,
     initError,
     walBalance,
@@ -80,6 +85,14 @@ function App() {
     setIsHelpOpen(false);
   };
 
+  const handleOpenBlobList = () => {
+    setIsBlobListOpen(true);
+  };
+
+  const handleCloseBlobList = () => {
+    setIsBlobListOpen(false);
+  };
+
   // 全局快捷键处理
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -114,7 +127,10 @@ function App() {
 
   return (
     <div className="app-container">
-      <Navbar onHelpClick={handleHelpClick} />
+      <Navbar
+        onHelpClick={handleHelpClick}
+        onOpenBlobList={handleOpenBlobList}
+      />
       <div
         style={{
           padding: "10px",
@@ -125,6 +141,7 @@ function App() {
         <button onClick={handleTestWalrus} style={{ marginRight: "10px" }}>
           测试 Walrus 客户端
         </button>
+
         {isConnected && (
           <>
             <button onClick={checkWalBalance} style={{ marginRight: "10px" }}>
@@ -185,6 +202,11 @@ function App() {
       />
       <HelpModal isOpen={isHelpOpen} onClose={handleHelpClose} />
       <SaveStatus saveState={saveState} onClose={resetSaveState} />
+      <BlobList
+        isOpen={isBlobListOpen}
+        onClose={handleCloseBlobList}
+        currentAccount={currentAccount?.address}
+      />
     </div>
   );
 }

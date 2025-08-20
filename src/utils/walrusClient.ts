@@ -98,6 +98,183 @@ export const createWalrusFileFromMarkdown = (
 let _walrusClient: WalrusClient | null = null;
 let _initializationPromise: Promise<WalrusClient> | null = null;
 
+// Blob 对象类型
+const BLOB_OBJECT_TYPE =
+  "0xfdc88f7d7cf30afab2f82e8380d11ee8f70efb90e863d1de8616fae1bb09ea77::blob::Blob";
+
+// 查询用户拥有的 Blob 对象
+export const queryUserBlobs = async (
+  ownerAddress: string,
+  network: "testnet" | "mainnet" = "mainnet"
+): Promise<any[]> => {
+  try {
+    const suiClient = createSuiClient(network);
+
+    console.log(`🔍 查询地址: ${ownerAddress}`);
+    console.log(`🔍 查询网络: ${network}`);
+    console.log(`🔍 查询类型: ${BLOB_OBJECT_TYPE}`);
+
+    let allObjects: any[] = [];
+    let cursor: string | null = null;
+    let hasNextPage = true;
+
+    // 分页查询所有 Blob 对象
+    while (hasNextPage) {
+      const queryParams: any = {
+        owner: ownerAddress,
+        filter: {
+          StructType: BLOB_OBJECT_TYPE,
+        },
+        options: {
+          showContent: true,
+          showDisplay: true,
+          showOwner: true,
+        },
+      };
+
+      if (cursor) {
+        queryParams.cursor = cursor;
+      }
+
+      const objects = await suiClient.getOwnedObjects(queryParams);
+
+      console.log(`📄 分页查询结果:`, {
+        pageCount: objects.data?.length || 0,
+        hasNextPage: objects.hasNextPage,
+        nextCursor: objects.nextCursor,
+      });
+
+      if (objects.data) {
+        allObjects = allObjects.concat(objects.data);
+      }
+
+      hasNextPage = objects.hasNextPage;
+      cursor = objects.nextCursor || null;
+    }
+
+    console.log("📊 总查询结果:", {
+      totalCount: allObjects.length,
+      objectIds: allObjects.map((obj) => obj.data?.objectId),
+    });
+
+    return allObjects;
+  } catch (error) {
+    console.error("❌ Error querying user blobs:", error);
+    throw error;
+  }
+};
+
+// 从 Blob 对象中提取信息
+export const extractBlobInfo = (blobObject: any) => {
+  try {
+    console.log("Processing blob object:", blobObject);
+
+    const content = blobObject.data?.content;
+    if (!content) {
+      console.log("No content found in blob object");
+      return null;
+    }
+
+    const fields = content.fields || {};
+    const display = blobObject.data?.display || {};
+
+    // 获取真正的 Walrus blob_id（u256 类型）
+    const walrusBlobId = fields.blob_id || fields.blobId;
+    // Sui 对象 ID
+    const suiObjectId = blobObject.data?.objectId;
+
+    // 如果 walrusBlobId 是十进制格式，转换为多种格式
+    let convertedBlobId = walrusBlobId;
+    let urlSafeBase64Id = null;
+
+    if (walrusBlobId && /^\d+$/.test(walrusBlobId)) {
+      try {
+        // 转换为十六进制
+        const bigInt = BigInt(walrusBlobId);
+        convertedBlobId = "0x" + bigInt.toString(16);
+        console.log(`🔄 转换 blob ID: ${walrusBlobId} -> ${convertedBlobId}`);
+
+        // 转换为 URL-safe Base64
+        urlSafeBase64Id = decimalToUrlSafeBase64(walrusBlobId);
+        if (urlSafeBase64Id) {
+          console.log(`🔄 URL-safe Base64: ${urlSafeBase64Id}`);
+        }
+      } catch (error) {
+        console.error("❌ blob ID 转换失败:", error);
+      }
+    }
+
+    // 检测 ID 格式
+    const walrusBlobIdFormat = walrusBlobId
+      ? detectIdFormat(walrusBlobId)
+      : "none";
+    const suiObjectIdFormat = suiObjectId
+      ? detectIdFormat(suiObjectId)
+      : "none";
+
+    console.log("🔍 ID 信息:", {
+      suiObjectId,
+      suiObjectIdFormat,
+      walrusBlobId,
+      walrusBlobIdFormat,
+      fieldsKeys: Object.keys(fields),
+      allFields: fields,
+    });
+
+    // 优先使用转换后的 blob_id，如果找不到则使用 Sui 对象 ID 作为备选
+    const finalBlobId = convertedBlobId || walrusBlobId || suiObjectId;
+
+    // 从不同字段获取文件信息
+    const filename =
+      fields.filename || fields.name || display.name || "unknown.md";
+    const size = fields.size || fields.length || fields.content_length || 0;
+    const createdAt =
+      fields.created_at ||
+      fields.createdAt ||
+      fields.timestamp ||
+      new Date().toISOString();
+    const owner = blobObject.data?.owner?.AddressOwner || "unknown";
+
+    // 尝试获取内容
+    let contentText = "";
+    if (fields.content) {
+      contentText = fields.content;
+    } else if (fields.data) {
+      contentText = fields.data;
+    } else if (fields.text) {
+      contentText = fields.text;
+    } else if (fields.body) {
+      contentText = fields.body;
+    }
+
+    const result = {
+      blobId: finalBlobId,
+      walrusBlobId: walrusBlobId, // 保留 Walrus 原始 blob_id（十进制）
+      convertedBlobId: convertedBlobId, // 转换后的 blob_id（十六进制）
+      urlSafeBase64Id: urlSafeBase64Id, // URL-safe Base64 格式
+      suiObjectId: suiObjectId, // 保留 Sui 对象 ID
+      filename,
+      size: parseInt(size) || 0,
+      createdAt,
+      owner,
+      content: contentText,
+      // 其他可能的字段
+      epochs: fields.epochs,
+      deletable: fields.deletable,
+      storage_size: fields.storage_size,
+      // 添加更多调试信息
+      rawFields: fields,
+      rawDisplay: display,
+    };
+
+    console.log("✅ Extracted blob info:", result);
+    return result;
+  } catch (error) {
+    console.error("❌ Error extracting blob info:", error);
+    return null;
+  }
+};
+
 // 检查 WASM 支持
 const checkWasmSupport = () => {
   if (typeof WebAssembly === "undefined") {
@@ -231,4 +408,137 @@ export const testWalrusClient = async () => {
       error: error instanceof Error ? error.message : "Unknown error",
     };
   }
+};
+
+// 通过 Walrus blob ID 读取内容
+export const readBlobContent = async (
+  blobId: string,
+  network: "testnet" | "mainnet" = "mainnet"
+): Promise<string | null> => {
+  try {
+    console.log(`📖 正在读取 Blob 内容: ${blobId}`);
+    console.log(`📖 ID 格式: ${detectIdFormat(blobId)}`);
+
+    const walrusClient = await getWalrusClient(network);
+
+    // 使用 Walrus SDK 读取 blob 内容
+    const content = await walrusClient.readBlob({ blobId });
+
+    if (content) {
+      // 将 Uint8Array 转换为字符串
+      const decoder = new TextDecoder();
+      const text = decoder.decode(content);
+      console.log(`✅ 成功读取 Blob 内容: ${text.length} 字符`);
+      return text;
+    }
+
+    return null;
+  } catch (error) {
+    console.error(`❌ 读取 Blob 内容失败:`, error);
+    return null;
+  }
+};
+
+// 测试读取特定的 blob ID
+export const testReadBlob = async (blobId: string) => {
+  console.log(`🧪 测试读取 Blob: ${blobId}`);
+  console.log(`🧪 ID 格式检测: ${detectIdFormat(blobId)}`);
+
+  try {
+    const content = await readBlobContent(blobId, "mainnet");
+    if (content) {
+      console.log(`✅ 测试成功，内容长度: ${content.length}`);
+      console.log(`📄 内容预览: ${content.substring(0, 200)}...`);
+    } else {
+      console.log(`❌ 测试失败，无法读取内容`);
+    }
+    return content;
+  } catch (error) {
+    console.error(`❌ 测试失败:`, error);
+    return null;
+  }
+};
+
+// ID 格式检测和转换
+export const detectIdFormat = (id: string) => {
+  // Sui 对象 ID 格式：Base58 编码，通常 32 字节
+  const suiObjectIdPattern = /^[1-9A-HJ-NP-Za-km-z]{32,}$/;
+
+  // 十六进制格式（可能是 u256 的 hex 表示）
+  const hexPattern = /^0x[a-fA-F0-9]+$/;
+
+  // 纯数字（可能是 u256 的十进制表示）
+  const decimalPattern = /^\d+$/;
+
+  if (suiObjectIdPattern.test(id)) {
+    return "sui-object-id";
+  } else if (hexPattern.test(id)) {
+    return "hex-u256";
+  } else if (decimalPattern.test(id)) {
+    return "decimal-u256";
+  } else {
+    return "unknown";
+  }
+};
+
+// 转换为 URL-safe Base64 (no padding)
+export const decimalToUrlSafeBase64 = (
+  decimalString: string
+): string | null => {
+  try {
+    const bigInt = BigInt(decimalString);
+
+    // 转换为字节数组
+    const bytes: number[] = [];
+    let temp = bigInt;
+
+    while (temp > 0n) {
+      bytes.unshift(Number(temp & 0xffn));
+      temp = temp >> 8n;
+    }
+
+    // 转换为 Base64
+    const base64 = btoa(String.fromCharCode(...bytes));
+
+    // 转换为 URL-safe Base64 (no padding)
+    const urlSafeBase64 = base64
+      .replace(/\+/g, "-")
+      .replace(/\//g, "_")
+      .replace(/=/g, "");
+
+    return urlSafeBase64;
+  } catch (error) {
+    console.error("❌ URL-safe Base64 转换失败:", error);
+    return null;
+  }
+};
+
+// 转换 ID 格式
+export const convertIdFormat = (
+  id: string,
+  targetFormat: "hex" | "base58" | "decimal" | "urlsafe-base64"
+) => {
+  try {
+    const currentFormat = detectIdFormat(id);
+    console.log(`🔄 ID 格式转换: ${id} (${currentFormat} -> ${targetFormat})`);
+
+    if (targetFormat === "urlsafe-base64" && currentFormat === "decimal-u256") {
+      return decimalToUrlSafeBase64(id);
+    }
+
+    // 这里可以添加其他转换逻辑
+    // 目前先返回原始 ID，后续可以根据需要添加转换
+    return id;
+  } catch (error) {
+    console.error("❌ ID 格式转换失败:", error);
+    return id;
+  }
+};
+
+// 获取 Walruscan URL
+export const getWalruscanUrl = (
+  blobId: string,
+  network: "mainnet" | "testnet" = "mainnet"
+): string => {
+  return `https://walruscan.com/${network}/blob/${blobId}`;
 };
