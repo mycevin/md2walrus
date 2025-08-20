@@ -1,5 +1,5 @@
 import { getFullnodeUrl, SuiClient } from "@mysten/sui/client";
-import { WalrusClient, WalrusFile } from "@mysten/walrus";
+import { WalrusClient, WalrusFile, blobIdFromInt } from "@mysten/walrus";
 
 // 获取 WASM 文件的正确 URL
 const getWasmUrl = () => {
@@ -191,7 +191,7 @@ export const extractBlobInfo = (blobObject: any) => {
       try {
         // 转换为十六进制
         const bigInt = BigInt(walrusBlobId);
-        convertedBlobId = "0x" + bigInt.toString(16);
+        convertedBlobId = blobIdFromInt(bigInt);
         console.log(`🔄 转换 blob ID: ${walrusBlobId} -> ${convertedBlobId}`);
 
         // 转换为 URL-safe Base64

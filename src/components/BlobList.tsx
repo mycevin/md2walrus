@@ -8,21 +8,16 @@ import {
   Download,
   Trash2,
   RefreshCw,
-  TestTube,
 } from "lucide-react";
 import { blobStorage } from "../utils/blobStorage";
-import {
-  queryUserBlobs,
-  extractBlobInfo,
-  testReadBlob,
-} from "../utils/walrusClient";
+import { queryUserBlobs, extractBlobInfo } from "../utils/walrusClient";
 import "./BlobList.css";
+import { SUI_EXPLORER_URL } from "../utils/config";
 
 export interface BlobItem {
   blobId: string; // 优先使用 Walrus blob_id，备选 Sui 对象 ID
   walrusBlobId?: string; // Walrus 原始 blob_id (u256)
-  convertedBlobId?: string; // 转换后的 blob_id (十六进制)
-  urlSafeBase64Id?: string; // URL-safe Base64 格式
+  convertedBlobId?: string; // 转换后的 blob_id ()
   suiObjectId?: string; // Sui 对象 ID
   filename: string;
   size: number;
@@ -154,7 +149,7 @@ const BlobList: React.FC<BlobListProps> = ({
   };
 
   const shortenBlobId = (blobId: string): string => {
-    return `${blobId.slice(0, 8)}...${blobId.slice(-8)}`;
+    return `${blobId.slice(0, 10)}...${blobId.slice(-10)}`;
   };
 
   const openInWalruscan = (blobId: string) => {
@@ -179,20 +174,6 @@ const BlobList: React.FC<BlobListProps> = ({
     if (window.confirm("确定要删除这个文档吗？此操作不可撤销。")) {
       blobStorage.deleteBlob(blobId);
       setBlobs(blobs.filter((blob) => blob.blobId !== blobId));
-    }
-  };
-
-  const testBlobRead = async (blobId: string) => {
-    console.log(`🧪 测试读取 Blob ID: ${blobId}`);
-    const content = await testReadBlob(blobId);
-    if (content) {
-      alert(
-        `✅ 成功读取 Blob 内容！\n长度: ${
-          content.length
-        } 字符\n预览: ${content.substring(0, 100)}...`
-      );
-    } else {
-      alert(`❌ 无法读取 Blob 内容`);
     }
   };
 
@@ -264,8 +245,7 @@ const BlobList: React.FC<BlobListProps> = ({
                         className="blob-action-btn"
                         onClick={() =>
                           copyToClipboard(
-                            blob.urlSafeBase64Id ||
-                              blob.convertedBlobId ||
+                            blob.convertedBlobId ||
                               blob.walrusBlobId ||
                               blob.blobId
                           )
@@ -278,8 +258,7 @@ const BlobList: React.FC<BlobListProps> = ({
                         className="blob-action-btn"
                         onClick={() =>
                           openInWalruscan(
-                            blob.urlSafeBase64Id ||
-                              blob.convertedBlobId ||
+                            blob.convertedBlobId ||
                               blob.walrusBlobId ||
                               blob.blobId
                           )
@@ -302,37 +281,15 @@ const BlobList: React.FC<BlobListProps> = ({
                       >
                         <Trash2 size={14} />
                       </button>
-                      <button
-                        className="blob-action-btn test-btn"
-                        onClick={() =>
-                          testBlobRead(
-                            blob.urlSafeBase64Id ||
-                              blob.convertedBlobId ||
-                              blob.walrusBlobId ||
-                              blob.blobId
-                          )
-                        }
-                        title="测试读取 Blob (优先 URL-safe Base64)"
-                      >
-                        <TestTube size={14} />
-                      </button>
                     </div>
                   </div>
 
                   <div className="blob-item-details">
-                    {blob.urlSafeBase64Id && (
-                      <div className="blob-detail-row">
-                        <span className="blob-detail-label">
-                          URL-safe Base64 ID:
-                        </span>
-                        <code className="blob-detail-value">
-                          {shortenBlobId(blob.urlSafeBase64Id)}
-                        </code>
-                      </div>
-                    )}
                     {blob.convertedBlobId && (
                       <div className="blob-detail-row">
-                        <span className="blob-detail-label">Hex Blob ID:</span>
+                        <span className="blob-detail-label">
+                          Field Blob ID:
+                        </span>
                         <code className="blob-detail-value">
                           {shortenBlobId(blob.convertedBlobId)}
                         </code>
@@ -353,9 +310,14 @@ const BlobList: React.FC<BlobListProps> = ({
                         <span className="blob-detail-label">
                           Sui Object ID:
                         </span>
-                        <code className="blob-detail-value">
+                        <a
+                          href={`${SUI_EXPLORER_URL}/object/${blob.suiObjectId}`}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="blob-detail-value"
+                        >
                           {shortenBlobId(blob.suiObjectId)}
-                        </code>
+                        </a>
                       </div>
                     )}
                     <div className="blob-detail-row">
@@ -374,8 +336,14 @@ const BlobList: React.FC<BlobListProps> = ({
                     <div className="blob-detail-row">
                       <span className="blob-detail-label">所有者:</span>
                       <span className="blob-detail-value">
-                        <User size={12} />
-                        {shortenAddress(blob.owner)}
+                        <a
+                          href={`${SUI_EXPLORER_URL}/address/${blob.owner}`}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                        >
+                          <User size={12} />
+                          {shortenAddress(blob.owner)}
+                        </a>
                       </span>
                     </div>
                   </div>
