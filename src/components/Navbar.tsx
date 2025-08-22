@@ -1,36 +1,51 @@
-import { HelpCircle, List } from "lucide-react";
+import { useState } from "react";
+import { HelpCircle, Activity } from "lucide-react";
 import { ConnectButton } from "@mysten/dapp-kit";
+import { HelpModal } from "./index";
+import { EnvironmentCheck } from "./index";
 import NetworkStatus from "./NetworkStatus";
 import "./Navbar.css";
 
-interface NavbarProps {
-  onHelpClick: () => void;
-  onOpenBlobList?: () => void;
-}
+const Navbar = () => {
+  const [showHelp, setShowHelp] = useState(false);
+  const [showEnvironmentCheck, setShowEnvironmentCheck] = useState(false);
 
-const Navbar = ({ onHelpClick, onOpenBlobList }: NavbarProps) => {
   return (
-    <div className="navbar">
-      <div className="navbar-left">
-        <div className="logo">md2walrus</div>
-      </div>
-      <div className="navbar-right">
-        <NetworkStatus />
-        {onOpenBlobList && (
+    <>
+      <nav className="navbar">
+        <div className="navbar-brand">
+          <h1>MD2Walrus</h1>
+        </div>
+
+        <div className="navbar-actions">
+          <NetworkStatus />
+
           <button
-            className="navbar-button blob-list-button"
-            onClick={onOpenBlobList}
-            title="我的文档列表"
+            className="navbar-button"
+            onClick={() => setShowEnvironmentCheck(true)}
+            title="环境检测"
           >
-            <List size={20} />
+            <Activity size={20} />
           </button>
-        )}
-        <button className="help-button" onClick={onHelpClick} title="Help">
-          <HelpCircle size={20} />
-        </button>
-        <ConnectButton connectText="Connect Sui Wallet" />
-      </div>
-    </div>
+
+          <button
+            className="navbar-button"
+            onClick={() => setShowHelp(true)}
+            title="帮助"
+          >
+            <HelpCircle size={20} />
+          </button>
+
+          <ConnectButton connectText="连接钱包" className="connect-button" />
+        </div>
+      </nav>
+
+      <HelpModal isOpen={showHelp} onClose={() => setShowHelp(false)} />
+      <EnvironmentCheck
+        isOpen={showEnvironmentCheck}
+        onClose={() => setShowEnvironmentCheck(false)}
+      />
+    </>
   );
 };
 

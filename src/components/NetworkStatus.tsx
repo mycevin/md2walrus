@@ -1,4 +1,4 @@
-import { Wifi, Loader2, ChevronDown } from "lucide-react";
+import { Wifi, Loader2, ChevronDown, AlertTriangle } from "lucide-react";
 import {
   useCurrentAccount,
   useCurrentWallet,
@@ -19,12 +19,32 @@ const NetworkStatus = ({ className = "" }: NetworkStatusProps) => {
     network: string;
     isConnected: boolean;
     isLoading: boolean;
+    connectionQuality: "good" | "poor" | "unknown";
   }>({
     network: "Checking...",
     isConnected: false,
     isLoading: true,
+    connectionQuality: "unknown",
   });
   const [showNetworkSelector, setShowNetworkSelector] = useState(false);
+
+  // 检查网络连接质量
+  const checkConnectionQuality = async (): Promise<"good" | "poor"> => {
+    try {
+      const startTime = Date.now();
+      await fetch("https://httpbin.org/get", {
+        method: "GET",
+        mode: "no-cors",
+        cache: "no-cache",
+      });
+      const responseTime = Date.now() - startTime;
+
+      // 如果响应时间超过2秒，认为网络质量较差
+      return responseTime < 2000 ? "good" : "poor";
+    } catch {
+      return "poor";
+    }
+  };
 
   // 点击外部区域关闭网络选择器
   useEffect(() => {
@@ -51,6 +71,7 @@ const NetworkStatus = ({ className = "" }: NetworkStatusProps) => {
           network: "Not Connected",
           isConnected: false,
           isLoading: false,
+          connectionQuality: "unknown",
         });
         return;
       }
@@ -93,10 +114,14 @@ const NetworkStatus = ({ className = "" }: NetworkStatusProps) => {
         // 简化：移除复杂的网络检测逻辑
         console.log("Final detected network:", networkName);
 
+        // 检查网络连接质量
+        const quality = await checkConnectionQuality();
+
         setNetworkInfo({
           network: networkName,
           isConnected: true,
           isLoading: false,
+          connectionQuality: quality,
         });
       } catch (error) {
         console.log("Network detection error:", error);
@@ -104,6 +129,7 @@ const NetworkStatus = ({ className = "" }: NetworkStatusProps) => {
           network: "Sui Mainnet",
           isConnected: !!currentAccount,
           isLoading: false,
+          connectionQuality: "unknown",
         });
       }
     };
@@ -155,7 +181,9 @@ const NetworkStatus = ({ className = "" }: NetworkStatusProps) => {
 
   const networkType = getNetworkType();
   const tooltip = networkInfo.isConnected
-    ? `Connected to ${networkInfo.network}`
+    ? `Connected to ${networkInfo.network}${
+        networkInfo.connectionQuality === "poor" ? " (Poor connection)" : ""
+      }`
     : "Wallet not connected";
 
   // 简化：移除网络切换功能
@@ -182,6 +210,8 @@ const NetworkStatus = ({ className = "" }: NetworkStatusProps) => {
       >
         {networkInfo.isLoading ? (
           <Loader2 size={16} className="network-icon loading" />
+        ) : networkInfo.connectionQuality === "poor" ? (
+          <AlertTriangle size={16} className="network-icon poor" />
         ) : (
           <Wifi size={16} className="network-icon connected" />
         )}

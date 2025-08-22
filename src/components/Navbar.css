@@ -1,132 +1,107 @@
 /* 顶部导航栏样式 */
 .navbar {
   display: flex;
-  align-items: center;
   justify-content: space-between;
-  padding: 12px 24px;
-  background-color: #ffffff;
-  border-bottom: 1px solid #e1e4e8;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-  min-height: 60px;
-}
-
-.navbar-left {
-  display: flex;
   align-items: center;
-  gap: 16px;
+  padding: 0 20px;
+  height: 60px;
+  background: white;
+  border-bottom: 1px solid #e5e7eb;
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
 }
 
-.logo {
-  font-size: 20px;
-  font-weight: 700;
-  color: #24292f;
-  text-decoration: none;
-  letter-spacing: -0.5px;
-  cursor: pointer;
+.navbar-brand h1 {
+  margin: 0;
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #1f2937;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
 }
 
-.logo:hover {
-  color: #0969da;
-  cursor: pointer;
-}
-
-.navbar-right {
+.navbar-actions {
   display: flex;
   align-items: center;
   gap: 12px;
-}
-
-/* Network Status is now handled by NetworkStatus component */
-
-.help-button {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 36px;
-  height: 36px;
-  padding: 0;
-  border: 1px solid transparent;
-  border-radius: 6px;
-  background-color: transparent;
-  color: #656d76;
-  cursor: pointer;
-  transition: all 0.15s ease;
-}
-
-.help-button:hover {
-  background-color: #f3f4f6;
-  border-color: #d1d5da;
-  color: #0969da;
-  transform: translateY(-1px);
-}
-
-.help-button:active {
-  transform: translateY(0);
 }
 
 .navbar-button {
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 36px;
-  height: 36px;
-  padding: 0;
-  border: 1px solid transparent;
-  border-radius: 6px;
-  background-color: transparent;
-  color: #656d76;
+  width: 40px;
+  height: 40px;
+  border: none;
+  background: #f8fafc;
+  border-radius: 8px;
   cursor: pointer;
-  transition: all 0.15s ease;
+  transition: all 0.2s ease;
+  color: #6b7280;
 }
 
 .navbar-button:hover {
-  background-color: #f3f4f6;
-  border-color: #d1d5da;
-  color: #0969da;
+  background: #e2e8f0;
+  color: #374151;
   transform: translateY(-1px);
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
 }
 
 .navbar-button:active {
   transform: translateY(0);
 }
 
-.blob-list-button {
-  color: #667eea;
+.connect-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px 16px;
+  border: 1px solid #d1d5db;
+  background: #ffffff;
+  color: #374151;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-weight: 500;
+  font-size: 0.875rem;
+  min-width: 100px;
 }
 
-.blob-list-button:hover {
-  background-color: #f0f4ff;
-  border-color: #667eea;
-  color: #4f46e5;
+.connect-button:hover {
+  background: #f9fafb;
+  border-color: #9ca3af;
+  transform: translateY(-1px);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
-/* 确保所有按钮都显示手形光标 */
-button,
-[role="button"],
-.logo {
-  cursor: pointer !important;
-}
-
-/* 悬停时强制显示手形光标 */
-button:hover,
-[role="button"]:hover,
-.logo:hover {
-  cursor: pointer !important;
+.connect-button:active {
+  transform: translateY(0);
 }
 
 /* 响应式设计 */
-@media (max-width: 768px) {
+@media (max-width: 640px) {
   .navbar {
-    padding: 8px 16px;
+    padding: 0 16px;
+    height: 50px;
   }
-  
-  .logo {
-    font-size: 18px;
+
+  .navbar-brand h1 {
+    font-size: 1.25rem;
   }
-  
-  /* Network status responsive styles are handled by NetworkStatus component */
-  
-  .navbar-right {
+
+  .navbar-actions {
     gap: 8px;
+  }
+
+  .navbar-button {
+    width: 36px;
+    height: 36px;
+  }
+
+  .connect-button {
+    padding: 6px 12px;
+    font-size: 0.75rem;
+    min-width: 80px;
   }
 }

@@ -225,13 +225,23 @@
   border-color: #9ca3af;
 }
 
-.blob-action-btn.delete-btn:hover {
+.blob-action-btn.delete-btn {
   background: #fef2f2;
+  border-color: #fecaca;
+}
+
+.blob-action-btn.delete-btn svg {
+  color: #dc2626;
+}
+
+.blob-action-btn.delete-btn:hover {
+  background: #fee2e2;
   border-color: #f87171;
+  transform: scale(1.05);
 }
 
 .blob-action-btn.delete-btn:hover svg {
-  color: #dc2626;
+  color: #b91c1c;
 }
 
 .blob-action-btn.test-btn:hover {
@@ -381,6 +391,93 @@
   background: #667eea;
   color: white;
   text-decoration: none;
+}
+
+/* 删除确认对话框样式 */
+.delete-confirmation {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+  padding: 24px;
+  max-width: 400px;
+  width: 90%;
+  z-index: 2000;
+}
+
+.delete-confirmation h3 {
+  margin: 0 0 16px 0;
+  color: #dc2626;
+  font-size: 1.25rem;
+  font-weight: 600;
+}
+
+.delete-confirmation .warning {
+  background: #fef2f2;
+  border: 1px solid #fecaca;
+  border-radius: 8px;
+  padding: 12px;
+  margin: 16px 0;
+  color: #dc2626;
+  font-size: 0.875rem;
+}
+
+.delete-confirmation .blob-info {
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  padding: 12px;
+  margin: 16px 0;
+  font-size: 0.875rem;
+}
+
+.delete-confirmation .blob-info .info-row {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 4px;
+}
+
+.delete-confirmation .blob-info .info-row:last-child {
+  margin-bottom: 0;
+}
+
+.delete-confirmation .actions {
+  display: flex;
+  gap: 12px;
+  justify-content: flex-end;
+  margin-top: 20px;
+}
+
+.delete-confirmation .btn {
+  padding: 8px 16px;
+  border-radius: 6px;
+  border: none;
+  cursor: pointer;
+  font-size: 0.875rem;
+  font-weight: 500;
+  transition: all 0.2s;
+}
+
+.delete-confirmation .btn-cancel {
+  background: #f3f4f6;
+  color: #374151;
+  border: 1px solid #d1d5db;
+}
+
+.delete-confirmation .btn-cancel:hover {
+  background: #e5e7eb;
+}
+
+.delete-confirmation .btn-delete {
+  background: #dc2626;
+  color: white;
+}
+
+.delete-confirmation .btn-delete:hover {
+  background: #b91c1c;
 }
 
 /* 响应式设计 */

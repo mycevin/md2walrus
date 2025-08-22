@@ -1,7 +1,10 @@
-export { default as Navbar } from "./Navbar";
-export { default as Toolbar } from "./Toolbar";
+export { default as BlobList } from "./BlobList";
+export { default as DeleteConfirmation } from "./DeleteConfirmation";
 export { default as Editor } from "./Editor";
 export { default as HelpModal } from "./HelpModal";
+export { default as Navbar } from "./Navbar";
 export { default as NetworkStatus } from "./NetworkStatus";
-export { default as BlobList } from "./BlobList";
+export { default as SaveStatus } from "./SaveStatus";
+export { default as Toolbar } from "./Toolbar";
 export { WalletProvider } from "./WalletProvider";
+export { default as EnvironmentCheck } from "./EnvironmentCheck";

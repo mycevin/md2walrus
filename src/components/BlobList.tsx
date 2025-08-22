@@ -9,8 +9,18 @@ import {
   Trash2,
   RefreshCw,
 } from "lucide-react";
+import {
+  useSignAndExecuteTransaction,
+  useCurrentAccount,
+} from "@mysten/dapp-kit";
 import { blobStorage } from "../utils/blobStorage";
-import { queryUserBlobs, extractBlobInfo } from "../utils/walrusClient";
+import {
+  queryUserBlobs,
+  extractBlobInfo,
+  deleteBlobFromChain,
+  checkBlobDeletable,
+} from "../utils/walrusClient";
+import DeleteConfirmation from "./DeleteConfirmation";
 import "./BlobList.css";
 import { SUI_EXPLORER_URL } from "../utils/config";
 
@@ -37,10 +47,29 @@ const BlobList: React.FC<BlobListProps> = ({
   onClose,
   currentAccount,
 }) => {
+  const { mutateAsync: signAndExecuteTransaction } =
+    useSignAndExecuteTransaction();
+  const connectedAccount = useCurrentAccount();
   const [blobs, setBlobs] = useState<BlobItem[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [selectedBlob, setSelectedBlob] = useState<BlobItem | null>(null);
+  const [deleteConfirmation, setDeleteConfirmation] = useState<{
+    isOpen: boolean;
+    blob: BlobItem | null;
+  }>({
+    isOpen: false,
+    blob: null,
+  });
+  const [deletingBlob, setDeletingBlob] = useState<{
+    isDeleting: boolean;
+    blobId: string | null;
+    error: string | null;
+  }>({
+    isDeleting: false,
+    blobId: null,
+    error: null,
+  });
 
   useEffect(() => {
     if (isOpen) {
@@ -170,10 +199,78 @@ const BlobList: React.FC<BlobListProps> = ({
     URL.revokeObjectURL(url);
   };
 
-  const deleteBlob = (blobId: string) => {
-    if (window.confirm("确定要删除这个文档吗？此操作不可撤销。")) {
-      blobStorage.deleteBlob(blobId);
-      setBlobs(blobs.filter((blob) => blob.blobId !== blobId));
+  const showDeleteConfirmation = (blob: BlobItem) => {
+    setDeleteConfirmation({
+      isOpen: true,
+      blob,
+    });
+  };
+
+  const hideDeleteConfirmation = () => {
+    setDeleteConfirmation({
+      isOpen: false,
+      blob: null,
+    });
+  };
+
+  const confirmDelete = async () => {
+    const { blob } = deleteConfirmation;
+    if (!blob || !connectedAccount) return;
+
+    // 开始删除流程
+    setDeletingBlob({
+      isDeleting: true,
+      blobId: blob.blobId,
+      error: null,
+    });
+
+    try {
+      // 检查 blob 是否可删除
+      const isDeletable = await checkBlobDeletable(
+        blob.suiObjectId || blob.blobId,
+        "mainnet"
+      );
+
+      if (!isDeletable) {
+        throw new Error("该文档不支持链上删除，或您没有删除权限");
+      }
+
+      // 使用 dapp-kit 的签名方法执行删除
+      const deleteResult = await deleteBlobFromChain(
+        blob.suiObjectId || blob.blobId,
+        signAndExecuteTransaction,
+        connectedAccount.address,
+        "mainnet"
+      );
+
+      if (!deleteResult.success) {
+        throw new Error(deleteResult.error || "删除失败");
+      }
+
+      // 从本地存储中删除
+      blobStorage.deleteBlob(blob.blobId);
+      // 从当前列表中移除
+      setBlobs(blobs.filter((b) => b.blobId !== blob.blobId));
+
+      // 显示删除成功提示
+      console.log(`✅ 文档 "${blob.filename}" 已从链上永久删除`);
+      console.log(`📝 交易哈希: ${deleteResult.transactionDigest}`);
+
+      // 关闭确认对话框
+      hideDeleteConfirmation();
+    } catch (error) {
+      console.error("❌ 删除失败:", error);
+      setDeletingBlob({
+        isDeleting: false,
+        blobId: null,
+        error: error instanceof Error ? error.message : "删除失败",
+      });
+    } finally {
+      setDeletingBlob({
+        isDeleting: false,
+        blobId: null,
+        error: null,
+      });
     }
   };
 
@@ -276,8 +373,8 @@ const BlobList: React.FC<BlobListProps> = ({
                       </button>
                       <button
                         className="blob-action-btn delete-btn"
-                        onClick={() => deleteBlob(blob.blobId)}
-                        title="删除文档"
+                        onClick={() => showDeleteConfirmation(blob)}
+                        title="从链上永久删除文档（不可恢复）"
                       >
                         <Trash2 size={14} />
                       </button>
@@ -397,6 +494,18 @@ const BlobList: React.FC<BlobListProps> = ({
           </a>
         </div>
       </div>
+
+      {/* 删除确认对话框 */}
+      <DeleteConfirmation
+        isOpen={deleteConfirmation.isOpen}
+        blob={deleteConfirmation.blob}
+        onConfirm={confirmDelete}
+        onCancel={hideDeleteConfirmation}
+        formatFileSize={formatFileSize}
+        formatDate={formatDate}
+        isDeleting={deletingBlob.isDeleting}
+        error={deletingBlob.error}
+      />
     </div>
   );
 };

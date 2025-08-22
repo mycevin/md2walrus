@@ -59,6 +59,13 @@ export interface SaveResult {
   transactionDigest?: string;
 }
 
+// 删除结果接口
+export interface DeleteResult {
+  success: boolean;
+  transactionDigest?: string;
+  error?: string;
+}
+
 // 保存流程状态
 export interface SaveFlowState {
   stage:
@@ -532,6 +539,72 @@ export const convertIdFormat = (
   } catch (error) {
     console.error("❌ ID 格式转换失败:", error);
     return id;
+  }
+};
+
+// 删除 blob 对象
+export const deleteBlobFromChain = async (
+  blobObjectId: string,
+  signAndExecuteTransaction: any,
+  ownerAddress: string,
+  network: "testnet" | "mainnet" = "mainnet"
+): Promise<DeleteResult> => {
+  try {
+    console.log(`🗑️ 开始删除 Blob 对象: ${blobObjectId}`);
+
+    const walrusClient = await getWalrusClient(network);
+
+    // 创建删除交易
+    const transaction = walrusClient.deleteBlobTransaction({
+      blobObjectId,
+      owner: ownerAddress,
+    });
+
+    // 执行删除交易
+    const result = await signAndExecuteTransaction({
+      transaction,
+    });
+
+    console.log(`✅ Blob 删除成功，交易哈希: ${result.digest}`);
+
+    return {
+      success: true,
+      transactionDigest: result.digest,
+    };
+  } catch (error) {
+    console.error("❌ 删除 Blob 失败:", error);
+    return {
+      success: false,
+      error: error instanceof Error ? error.message : "未知错误",
+    };
+  }
+};
+
+// 检查 blob 是否可删除
+export const checkBlobDeletable = async (
+  blobObjectId: string,
+  network: "testnet" | "mainnet" = "mainnet"
+): Promise<boolean> => {
+  try {
+    const suiClient = createSuiClient(network);
+
+    // 获取 blob 对象
+    const blobObject = await suiClient.getObject({
+      id: blobObjectId,
+      options: {
+        showContent: true,
+      },
+    });
+
+    if (!blobObject.data?.content) {
+      return false;
+    }
+
+    const fields = (blobObject.data.content as any).fields;
+    return fields?.deletable === true;
+  } catch (error) {
+    console.error("❌ 检查 blob 可删除性失败:", error);
+    return false;
   }
 };
 
