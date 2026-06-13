@@ -38,7 +38,7 @@ if (!reigstered) {
   // 注册 Enoki 钱包
   registerEnokiWallets({
     apiKey: "your-enoki-api-key",
-    client: suiClient,
+    client: suiClient as any,
     network: "mainnet",
     providers: {
       google: {

@@ -18,6 +18,7 @@ import {
   Minus,
   Copy,
   Download,
+  Upload,
   Save,
 } from "lucide-react";
 import type { ToolbarButton } from "../types";
@@ -30,6 +31,7 @@ import {
   insertImage,
   copyToClipboard,
   exportFile,
+  importFile,
 } from "../utils/editorUtils";
 import "./Toolbar.css";
 
@@ -43,6 +45,8 @@ interface ToolbarProps {
   onSave?: () => void;
   isSaving?: boolean;
   isDisabled?: boolean;
+  filename?: string;
+  setFilename?: (filename: string) => void;
 }
 
 const Toolbar = ({
@@ -55,7 +59,18 @@ const Toolbar = ({
   onSave,
   isSaving = false,
   isDisabled = false,
+  filename,
+  setFilename,
 }: ToolbarProps) => {
+  // 处理文件导入
+  const handleImport = async () => {
+    try {
+      await importFile(setValue, setFilename);
+    } catch (error) {
+      console.error("导入文件失败:", error);
+      alert("导入文件失败，请重试");
+    }
+  };
   // 视图切换按钮
   const viewButtons: ToolbarButton[] = [
     {
@@ -170,13 +185,18 @@ const Toolbar = ({
   // 操作按钮
   const actionButtons: ToolbarButton[] = [
     {
+      icon: Upload,
+      onClick: handleImport,
+      title: "Import File",
+    },
+    {
       icon: Copy,
       onClick: () => copyToClipboard(value),
       title: "Copy Content",
     },
     {
       icon: Download,
-      onClick: () => exportFile(value),
+      onClick: () => exportFile(value, filename || "document.md"),
       title: "Export File",
     },
   ];

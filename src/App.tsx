@@ -12,6 +12,7 @@ import "./App.css";
 
 function App() {
   const [isBlobListOpen, setIsBlobListOpen] = useState(false);
+  const [filename, setFilename] = useState("document.md");
   const {
     saveToWalrus,
     saveState,
@@ -37,10 +38,9 @@ function App() {
     }
 
     try {
-      const result = await saveToWalrus(value, "document.md");
+      const result = await saveToWalrus(value, filename);
       if (result.success) {
         console.log("保存成功！Blob ID:", result.blobId);
-        // 可以在这里添加成功提示
       } else {
         console.error("保存失败:", result.error);
         alert(`保存失败: ${result.error}`);
@@ -49,7 +49,7 @@ function App() {
       console.error("保存过程中发生错误:", error);
       alert("保存过程中发生错误，请重试");
     }
-  }, [saveToWalrus, value, isConnected, isInitialized, initError]);
+  }, [saveToWalrus, value, isConnected, isInitialized, initError, filename]);
 
 
 
@@ -90,6 +90,8 @@ function App() {
           saveState.stage === "certifying"
         }
         isDisabled={!isInitialized}
+        filename={filename}
+        setFilename={setFilename}
       />
       <Editor
         isEditing={isEditing}
