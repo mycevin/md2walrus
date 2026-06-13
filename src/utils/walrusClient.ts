@@ -3,12 +3,9 @@ import { WalrusClient, WalrusFile, blobIdFromInt } from "@mysten/walrus";
 
 // 获取 WASM 文件的正确 URL
 const getWasmUrl = () => {
-  // 在开发环境中，使用相对路径
-  if (import.meta.env.DEV) {
-    return "/node_modules/.pnpm/@mysten+walrus-wasm@0.1.1/node_modules/@mysten/walrus-wasm/web/walrus_wasm_bg.wasm";
-  }
-  // 在生产环境中，使用 CDN 或打包后的路径
-  return "https://unpkg.com/@mysten/walrus-wasm@0.1.1/web/walrus_wasm_bg.wasm";
+  // 在开发和生产环境中都使用公共路径
+  // Vite 会自动从 public 目录提供静态文件
+  return "/walrus_wasm_bg.wasm";
 };
 
 // 创建 Sui 客户端
@@ -30,7 +27,7 @@ export const createWalrusClient = (
     // 使用最简配置，让 SDK 自动处理 WASM 加载
     return new WalrusClient({
       network,
-      suiClient: suiClient as never,
+      suiClient: suiClient as any,
       wasmUrl: getWasmUrl(),
     });
   } catch (error) {
@@ -307,7 +304,7 @@ const waitForWasmLoad = async (maxRetries = 5, delay = 1000) => {
       // 尝试创建一个简单的 WalrusClient 实例来检查 WASM 是否已加载
       new WalrusClient({
         network: "mainnet",
-        suiClient: new SuiClient({ url: getFullnodeUrl("mainnet") }) as never,
+        suiClient: new SuiClient({ url: getFullnodeUrl("mainnet") }) as any,
         wasmUrl: getWasmUrl(),
       });
 

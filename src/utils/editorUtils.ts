@@ -190,3 +190,40 @@ export const exportFile = (
   a.click();
   URL.revokeObjectURL(url);
 };
+
+// 导入本地 Markdown 文件
+export const importFile = (
+  setValue: (value: string) => void,
+  setFilename?: (filename: string) => void
+): Promise<void> => {
+  return new Promise((resolve, reject) => {
+    const input = document.createElement("input");
+    input.type = "file";
+    input.accept = ".md,.markdown,.txt,text/markdown";
+
+    input.onchange = async (e) => {
+      const file = (e.target as HTMLInputElement).files?.[0];
+      if (!file) {
+        reject(new Error("No file selected"));
+        return;
+      }
+
+      try {
+        const content = await file.text();
+        setValue(content);
+        if (setFilename) {
+          setFilename(file.name);
+        }
+        resolve();
+      } catch (error) {
+        reject(error);
+      }
+    };
+
+    input.onerror = () => {
+      reject(new Error("Failed to select file"));
+    };
+
+    input.click();
+  });
+};
